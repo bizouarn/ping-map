@@ -1,5 +1,5 @@
 const tileSize = 85;
-const bounds = [[0, 0],[-255 * tileSize, 255 * tileSize]];
+const bounds = [[0, 0],[-256 * tileSize, 256 * tileSize]];
 
 const map = L.map('map', {
     crs: L.CRS.Simple

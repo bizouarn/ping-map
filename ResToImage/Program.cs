@@ -18,6 +18,8 @@ namespace ResToImage
             {
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
                 var outputFilePath = Path.Combine(outputDirectory, fileName + ".png");
+                if (File.Exists(outputFilePath))
+                    continue;
 
                 var lines = File.ReadAllLines(filePath);
                 var height = lines.Length;
