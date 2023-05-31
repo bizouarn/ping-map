@@ -20,7 +20,10 @@ namespace pingCore
 
             for (var i = int.Parse(startIP[0]); i <= int.Parse(endIP[0]); i++)
             for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
+            {
                 tasks.Add(PingRange(i + "." + j));
+                await Task.Delay(100);
+            }
 
             await Task.WhenAll(tasks);
         }
