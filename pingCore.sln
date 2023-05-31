@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pingCore", "pingCore\pingCore.csproj", "{494CDFE3-9878-417B-AE28-EFC1392759FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResToImage", "ResToImage\ResToImage.csproj", "{7907283F-CAA3-4818-AC74-F93136D6DB1D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{494CDFE3-9878-417B-AE28-EFC1392759FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{494CDFE3-9878-417B-AE28-EFC1392759FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{494CDFE3-9878-417B-AE28-EFC1392759FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{494CDFE3-9878-417B-AE28-EFC1392759FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7907283F-CAA3-4818-AC74-F93136D6DB1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7907283F-CAA3-4818-AC74-F93136D6DB1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7907283F-CAA3-4818-AC74-F93136D6DB1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7907283F-CAA3-4818-AC74-F93136D6DB1D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {42AA6832-3D57-468C-A8CC-E8958FEA3AF7}
+	EndGlobalSection
+EndGlobal
