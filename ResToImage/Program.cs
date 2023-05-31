@@ -10,6 +10,7 @@ namespace ResToImage
         {
             var inputDirectory = "D:\\GIT\\pingMap\\res"; // Répertoire d'entrée contenant les fichiers
             var outputDirectory = "D:\\GIT\\pingMap\\www\\image"; // Répertoire de sortie pour les images
+            var green = new MagickColor("#00FF00");
 
             // Obtenir la liste des fichiers dans le répertoire d'entrée
             var files = Directory.GetFiles(inputDirectory);
@@ -28,6 +29,7 @@ namespace ResToImage
                 using (var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), width, height))
                 {
                     image.Format = MagickFormat.Png;
+                    var drawable = new Drawables().FillColor(green);
 
                     for (var y = 0; y < height; y++)
                     {
@@ -35,12 +37,11 @@ namespace ResToImage
                         for (var x = 0; x < width; x++)
                             if (line[x] == '1')
                             {
-                                var green = new MagickColor("#00FF00");
-                                var drawable = new Drawables().FillColor(green).Point(x, y);
-                                image.Draw(drawable);
+                                drawable = drawable.Point(x, y);
                             }
                     }
 
+                    image.Draw(drawable);
                     image.Write(outputFilePath); // Enregistrer l'image au format PNG
                 }
 
