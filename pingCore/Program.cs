@@ -16,16 +16,42 @@ namespace pingCore
             var startIP = start.Split('.');
             var endIP = end.Split('.');
 
-            var tasks = new List<Task>();
+            var tasks = new List<WeakReference>();
 
             for (var i = int.Parse(startIP[0]); i <= int.Parse(endIP[0]); i++)
             for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
             {
-                tasks.Add(PingRange(i + "." + j));
-                await Task.Delay(100);
+                tasks.Add(new WeakReference(PingRange(i + "." + j)));
+                while (tasks.Count > 64)
+                {
+                    DeleteListInactiveRef(ref tasks);
+                    await Task.Delay(100);
+                }
+
             }
 
-            await Task.WhenAll(tasks);
+            while (tasks.Count > 0)
+            {
+                await Task.Delay(100);
+                DeleteListInactiveRef(ref tasks);
+            }
+        }
+
+        private static void DeleteListInactiveRef(ref List<WeakReference> list)
+        {
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                WeakReference weakRef = list[i];
+                if (!weakRef.IsAlive)
+                {
+                    list.RemoveAt(i);
+                }
+
+                if (weakRef.Target is Task task && task.IsCompleted)
+                {
+                    list.RemoveAt(i);
+                }
+            }
         }
 
         private static async Task<bool> Ping(string ip)
