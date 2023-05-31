@@ -9,7 +9,7 @@ namespace ResToImage
         private static void Main(string[] args)
         {
             var inputDirectory = "D:\\GIT\\pingMap\\res"; // Répertoire d'entrée contenant les fichiers
-            var outputDirectory = "D:\\GIT\\pingMap\\image"; // Répertoire de sortie pour les images
+            var outputDirectory = "D:\\GIT\\pingMap\\www\\image"; // Répertoire de sortie pour les images
 
             // Obtenir la liste des fichiers dans le répertoire d'entrée
             var files = Directory.GetFiles(inputDirectory);

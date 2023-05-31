@@ -1,0 +1,23 @@
+# Nom de notre workflow
+name: "Github pages"
+
+# Événements sur lesquels il doit être déclenché
+on:
+  push:         # <- Déclenché lorsque l'on pousse du code...
+    branches:
+      - main  # <- ... mais seulement sur la branche "master"
+
+jobs:
+  # Notre job
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    # Tâches à effectuer, comme expliquées ci-dessus
+    steps:
+      - uses: actions/checkout@v2
+      # Déploiement sur les Github Pages
+      - name: "Deploy Github Pages"
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages     # <- Branche sur laquelle seront commités les fichiers
+          FOLDER: www/  # <- Dossier contenant notre site générée
