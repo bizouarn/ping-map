@@ -8,7 +8,9 @@ namespace pingCore
 {
     internal class Program
     {
-        static async Task Main()
+        private const int MAX_TASK = 64;
+        private const int DELAY = 1000;
+        private static async Task Main()
         {
             var start = "0.0.0.1";
             var end = "255.255.255.255";
@@ -22,12 +24,13 @@ namespace pingCore
             for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
             {
                 tasks.Add(new WeakReference(PingRange(i + "." + j)));
-                while (tasks.Count > 64)
+                while (tasks.Count >= MAX_TASK)
                 {
                     DeleteListInactiveRef(ref tasks);
-                    await Task.Delay(100);
+                    await Task.Delay(DELAY * tasks.Count);
+                    Console.WriteLine(i / (int.Parse(endIP[0]) > 0 ? int.Parse(endIP[0]) : 1) * 100 + "%" +
+                                      $" ({tasks.Count}/{MAX_TASK})");
                 }
-
             }
 
             while (tasks.Count > 0)
@@ -39,25 +42,19 @@ namespace pingCore
 
         private static void DeleteListInactiveRef(ref List<WeakReference> list)
         {
-            for (int i = list.Count - 1; i >= 0; i--)
+            for (var i = list.Count - 1; i >= 0; i--)
             {
-                WeakReference weakRef = list[i];
-                if (!weakRef.IsAlive)
-                {
-                    list.RemoveAt(i);
-                }
+                var weakRef = list[i];
+                if (!weakRef.IsAlive) list.RemoveAt(i);
 
-                if (weakRef.Target is Task task && task.IsCompleted)
-                {
-                    list.RemoveAt(i);
-                }
+                if (weakRef.Target is Task task && task.IsCompleted) list.RemoveAt(i);
             }
         }
 
         private static async Task<bool> Ping(string ip)
         {
             using var ping = new Ping();
-            byte[] buffer = { 1 };
+            byte[] buffer = {1};
             try
             {
                 var reply = await ping.SendPingAsync(ip, 55, buffer); // Effectue un ping avec un délai de 5 secondes
@@ -78,7 +75,6 @@ namespace pingCore
             {
                 Directory.CreateDirectory("res");
             }
-            Console.WriteLine(file);
 
             using (var writer = File.CreateText(file))
             {
@@ -87,12 +83,8 @@ namespace pingCore
 
                 for (var k = 0; k <= 255; k++)
                 {
-                    Console.WriteLine($"{i}.{j}.{k}.X");
                     var tasks = new List<Task<bool>>();
-                    for (var l = 0; l <= 255; l++)
-                    {
-                        tasks.Add(Ping($"{i}.{j}.{k}.{l}"));
-                    }
+                    for (var l = 0; l <= 255; l++) tasks.Add(Ping($"{i}.{j}.{k}.{l}"));
 
                     var results = await Task.WhenAll(tasks);
                     foreach (var result in results) await writer.WriteAsync(result ? "1" : "0");
