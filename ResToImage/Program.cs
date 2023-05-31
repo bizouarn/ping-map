@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using ImageMagick;
 
@@ -19,21 +19,18 @@ namespace ResToImage
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
                 var outputFilePath = Path.Combine(outputDirectory, fileName + ".png");
 
-                var input = File.ReadAllText(filePath); // Lire le contenu du fichier
-
-                var width = input.IndexOf('\n'); // Largeur de l'image
-                var height = input.Split('\n').Length - 1; // Hauteur de l'image
+                var lines = File.ReadAllLines(filePath);
+                var height = lines.Length;
+                var width = lines[0].Length;
 
                 using (var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), width, height))
                 {
                     image.Format = MagickFormat.Png;
 
-                    var lines = input.Split('\n');
                     for (var y = 0; y < height; y++)
                     {
                         var line = lines[y].Trim();
-                        for (var x = 0; x < width - 1; x++)
-                            // Si c'est 1, mettre un pixel vert
+                        for (var x = 0; x < width; x++)
                             if (line[x] == '1')
                             {
                                 var green = new MagickColor("#00FF00");
