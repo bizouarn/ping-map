@@ -30,7 +30,10 @@ namespace pingCore.Ping
             {
                 Directory.CreateDirectory(Constantes.InputDirectory);
             }
+
             var file = Constantes.InputDirectory + $"\\{ip}.txt";
+            if(File.Exists(file))
+                return;
 
             using (var writer = File.CreateText(file))
             {
