@@ -28,7 +28,7 @@ namespace pingCore
                 {
                     DeleteListInactiveRef(ref tasks);
                     await Task.Delay(DELAY * tasks.Count);
-                    Console.WriteLine(i / (int.Parse(endIP[0]) > 0 ? int.Parse(endIP[0]) : 1) * 100 + "%" +
+                    Console.WriteLine(i + "." + j + ".0.0/16" +
                                       $" ({tasks.Count}/{MAX_TASK})");
                 }
             }
