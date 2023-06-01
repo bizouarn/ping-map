@@ -5,7 +5,7 @@ const map = L.map('map', {
     crs: L.CRS.Simple
 }).setView([127.5 * tileSize, 127.5 * tileSize], 0);
 
-const tile = L.tileLayer('image/{x}.{y}.png', {
+const tile = L.tileLayer('tiles/{x}.{y}.png', {
     tileSize: tileSize,
     bounds: bounds,
     tms: true,

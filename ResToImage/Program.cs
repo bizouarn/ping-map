@@ -1,50 +1,29 @@
 using System;
 using System.IO;
-using ImageMagick;
+using System.Threading.Tasks;
+using pingCore;
+using pingCore.Tiles;
 
 namespace ResToImage
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main()
         {
-            var inputDirectory = "D:\\GIT\\pingMap\\res"; // Répertoire d'entrée contenant les fichiers
-            var outputDirectory = "D:\\GIT\\pingMap\\www\\image"; // Répertoire de sortie pour les images
-            var green = new MagickColor("#00FF00");
-
             // Obtenir la liste des fichiers dans le répertoire d'entrée
-            var files = Directory.GetFiles(inputDirectory);
+            var files = Directory.GetFiles(Constantes.InputDirectory);
+
+            if(!Directory.Exists(Constantes.OutputDirectory))
+                Directory.CreateDirectory(Constantes.OutputDirectory);
 
             foreach (var filePath in files)
             {
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
-                var outputFilePath = Path.Combine(outputDirectory, fileName + ".png");
+                var outputFilePath = Path.Combine(Constantes.OutputDirectory, fileName + ".png");
                 if (File.Exists(outputFilePath))
                     continue;
 
-                var lines = File.ReadAllLines(filePath);
-                var height = lines.Length;
-                if(lines.Length <= 0) continue;
-                var width = lines[0].Length;
-
-                using (var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), width, height))
-                {
-                    image.Format = MagickFormat.Png;
-                    var drawable = new Drawables().FillColor(green);
-
-                    for (var y = 0; y < height; y++)
-                    {
-                        var line = lines[y].Trim();
-                        for (var x = 0; x < width; x++)
-                            if (line[x] == '1')
-                            {
-                                drawable = drawable.Point(x, y);
-                            }
-                    }
-
-                    image.Draw(drawable);
-                    image.Write(outputFilePath); // Enregistrer l'image au format PNG
-                }
+                await TilesGenerator.GenerateTiles(filePath, outputFilePath);
 
                 Console.WriteLine($"L'image {fileName}.png a été créée et enregistrée dans le répertoire 'image'.");
             }
