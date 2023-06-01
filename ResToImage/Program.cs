@@ -24,6 +24,7 @@ namespace ResToImage
 
                 var lines = File.ReadAllLines(filePath);
                 var height = lines.Length;
+                if(lines.Length <= 0) continue;
                 var width = lines[0].Length;
 
                 using (var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), width, height))
