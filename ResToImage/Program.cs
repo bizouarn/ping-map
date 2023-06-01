@@ -24,10 +24,16 @@ namespace ResToImage
                     continue;
 
                 await TilesGenerator.GenerateTiles(filePath, outputFilePath);
+
+                Console.WriteLine(fileName);
             }
 
-            TileMatrixBase matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\src\\", 255);
+            TileMatrixBase matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\src\\", 256);
             await matrix.ReduceImageMatrix(16,$"D:\\GIT\\pingMap\\www\\tiles\\0\\");
+            await matrix.ReduceImageMatrix(8,$"D:\\GIT\\pingMap\\www\\tiles\\1\\");
+            await matrix.ReduceImageMatrix(4,$"D:\\GIT\\pingMap\\www\\tiles\\2\\");
+            await matrix.ReduceImageMatrix(2,$"D:\\GIT\\pingMap\\www\\tiles\\3\\");
+            await matrix.ReduceImageMatrix(1,$"D:\\GIT\\pingMap\\www\\tiles\\4\\");   
         }
     }
 }

@@ -26,7 +26,7 @@ namespace pingCore.Tiles
             {
                 for (int j = 0; j < Size / size; j ++)
                 {
-                    await CombineImages(i * size,j* size,i* size + size,j* size +size, outPath + "\\" + x + "." + y + ".png" );
+                    await CombineImages(i * size,j* size,i* size + size,j* size +size, outPath + "\\" + y + "." + x + ".png" );
 
                     y++;
                 }
