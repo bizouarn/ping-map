@@ -24,9 +24,10 @@ namespace ResToImage
                     continue;
 
                 await TilesGenerator.GenerateTiles(filePath, outputFilePath);
-
-                Console.WriteLine($"L'image {fileName}.png a été créée et enregistrée dans le répertoire 'image'.");
             }
+
+            TileMatrixBase matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\src\\", 255);
+            await matrix.ReduceImageMatrix(16,$"D:\\GIT\\pingMap\\www\\tiles\\0\\");
         }
     }
 }
