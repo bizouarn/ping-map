@@ -1,15 +1,16 @@
-const tileSize = 85;
-const bounds = [[0, 0],[-256 * tileSize, 256 * tileSize]];
+const tileSize = 50;
+const bounds = [[0, 0],[-14 * tileSize, 14 * tileSize]];
 
 const map = L.map('map', {
     crs: L.CRS.Simple
-}).setView([127.5 * tileSize, 127.5 * tileSize], 0);
+}).setView([0, 0], 0);
 
-const tile = L.tileLayer('tiles/{x}.{y}.png', {
+const tile = L.tileLayer('tiles/{z}/{x}.{y}.png', {
     tileSize: tileSize,
     bounds: bounds,
     tms: true,
     continuousWorld: true,
+    minNativeZoom: 0,
     maxNativeZoom: 0
 }).addTo(map);
 
