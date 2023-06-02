@@ -27,7 +27,7 @@ namespace pingCore.Tiles
                 for (var j = 0; j < Size / size; j++)
                 {
                     await CombineImages(i * size, j * size, i * size + size, j * size + size,
-                        Path.Combine(outPath, $"{y}.{x}.png"));
+                        Path.Combine(outPath, $"{x}.{y}.png"));
 
                     y++;
                 }

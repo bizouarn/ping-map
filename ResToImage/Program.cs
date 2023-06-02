@@ -29,11 +29,18 @@ namespace ResToImage
             }
 
             TileMatrixBase matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\src\\", 256);
-            await matrix.ReduceImageMatrix(16,$"D:\\GIT\\pingMap\\www\\tiles\\0\\");
-            await matrix.ReduceImageMatrix(8,$"D:\\GIT\\pingMap\\www\\tiles\\1\\");
-            await matrix.ReduceImageMatrix(4,$"D:\\GIT\\pingMap\\www\\tiles\\2\\");
-            await matrix.ReduceImageMatrix(2,$"D:\\GIT\\pingMap\\www\\tiles\\3\\");
-            await matrix.ReduceImageMatrix(1,$"D:\\GIT\\pingMap\\www\\tiles\\4\\");   
+            await matrix.ReduceImageMatrix(128,$"D:\\GIT\\pingMap\\www\\tiles\\1\\");
+            matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\1\\", 2);
+            await matrix.ReduceImageMatrix(2,$"D:\\GIT\\pingMap\\www\\tiles\\0\\");
+            matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\src\\", 256);
+
+            await matrix.ReduceImageMatrix(64,$"D:\\GIT\\pingMap\\www\\tiles\\2\\");
+            await matrix.ReduceImageMatrix(32,$"D:\\GIT\\pingMap\\www\\tiles\\3\\");
+            await matrix.ReduceImageMatrix(16,$"D:\\GIT\\pingMap\\www\\tiles\\4\\");
+            await matrix.ReduceImageMatrix(8,$"D:\\GIT\\pingMap\\www\\tiles\\5\\");
+            await matrix.ReduceImageMatrix(4,$"D:\\GIT\\pingMap\\www\\tiles\\6\\");
+            await matrix.ReduceImageMatrix(2,$"D:\\GIT\\pingMap\\www\\tiles\\7\\");
+            await matrix.ReduceImageMatrix(1,$"D:\\GIT\\pingMap\\www\\tiles\\8\\");
         }
     }
 }
