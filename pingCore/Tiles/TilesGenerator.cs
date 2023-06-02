@@ -43,16 +43,14 @@ namespace pingCore.Tiles
                     green++;
 
             green /= 255;
-            if (green > 255)
-                green = 255;
+            green = Math.Min(green, 255);
 
-            var color = new MagickColor($"#00{green.ToString("X2")}00");
+            var color = new MagickColor($"#00{green:X2}00");
 
             using (var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), 255, 255))
             {
                 image.Format = MagickFormat.Png;
-                var drawable = new Drawables().FillColor(color);
-                drawable = drawable.Rectangle(0, 0, 255, 255);
+                var drawable = new Drawables().FillColor(color).Rectangle(0, 0, 255, 255);
                 image.Draw(drawable);
                 await image.WriteAsync(output); // Enregistrer l'image au format PNG
                 Console.WriteLine($"L'image {output}.png a été créée et enregistrée dans le répertoire 'image'.");
@@ -80,7 +78,7 @@ namespace pingCore.Tiles
                     var line = lines[y].Trim();
                     for (var x = 0; x < width; x++)
                         if (line[x] == '1')
-                            drawable = drawable.Point(x, y);
+                            drawable.Point(x, y);
                 }
 
                 image.Draw(drawable);
