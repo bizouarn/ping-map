@@ -8,7 +8,7 @@ namespace pingCore.Tiles
 {
     public class BigTilesMatrix : TileMatrixBase, IDisposable
     {
-        private readonly List<WeakReference> _cache = new List<WeakReference>();
+        private readonly List<MagickImage> _cache = new List<MagickImage>();
         private readonly string[][] _matrix;
         private readonly string _tempDir = Path.Combine("C:", "TEMP", "IM");
 
@@ -18,18 +18,20 @@ namespace pingCore.Tiles
             MagickNET.SetTempDirectory(_tempDir);
             _matrix = new string[size][];
 
-            for (var i = 0; i < size; i++) _matrix[i] = new string[size];
-
             for (var i = 0; i < size; i++)
+                _matrix[i] = new string[size];
+
+            Parallel.For(0, size, i =>
             {
                 for (var j = 0; j < size; j++)
                 {
                     var imagePath = Path.Combine(dir, $"{i}.{j}.png");
-                    if (File.Exists(imagePath)) _matrix[i][j] = imagePath;
+                    if (File.Exists(imagePath))
+                        _matrix[i][j] = imagePath;
                 }
 
                 Console.WriteLine($"{i}/{size}");
-            }
+            });
         }
 
         public void Dispose()
@@ -40,10 +42,11 @@ namespace pingCore.Tiles
         protected override MagickImage GetTile(int x, int y)
         {
             var fileName = _matrix[x][y];
-            if (!File.Exists(fileName))
+            if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
                 return null;
+
             var ret = new MagickImage(fileName);
-            _cache.Add(new WeakReference(ret));
+            _cache.Add(ret);
             return ret;
         }
 
@@ -52,11 +55,10 @@ namespace pingCore.Tiles
             Directory.Delete(_tempDir, true);
             Directory.CreateDirectory(_tempDir);
 
-            for (var i = 0; i < _cache.Count; i++)
-                if (_cache[i].Target is MagickImage image)
-                    image.Dispose();
+            foreach (var image in _cache)
+                image.Dispose();
 
-            _cache.RemoveAll(reference => !reference.IsAlive);
+            _cache.Clear();
         }
 
         public override async Task CombineImages(int lx, int ly, int rx, int ry, string outPath)
