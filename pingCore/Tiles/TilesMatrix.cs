@@ -1,33 +1,25 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using ImageMagick;
 
 namespace pingCore.Tiles
 {
     public class TilesMatrix : TileMatrixBase, IDisposable
     {
-        private MagickImage[][] _matrix;
+        private readonly MagickImage[][] _matrix;
 
         public TilesMatrix(string dir, int size = 255) : base(size)
         {
             _matrix = new MagickImage[size][];
 
+            for (var i = 0; i < size; i++) _matrix[i] = new MagickImage[size];
+
             for (var i = 0; i < size; i++)
             {
-                _matrix[i] = new MagickImage[size];
-            }
-
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
+                for (var j = 0; j < size; j++)
                 {
-                    string imagePath = Path.Combine(dir, $"{i}.{j}.png");
-                    if (File.Exists(imagePath))
-                    {
-                        _matrix[i][j] = new MagickImage(imagePath);
-                    }
+                    var imagePath = Path.Combine(dir, $"{i}.{j}.png");
+                    if (File.Exists(imagePath)) _matrix[i][j] = new MagickImage(imagePath);
                 }
 
                 Console.WriteLine($"{i}/{size}");
@@ -37,12 +29,8 @@ namespace pingCore.Tiles
         public void Dispose()
         {
             foreach (var row in _matrix)
-            {
-                foreach (var image in row)
-                {
-                    image?.Dispose();
-                }
-            }
+            foreach (var image in row)
+                image?.Dispose();
         }
 
         protected override MagickImage GetTile(int x, int y)

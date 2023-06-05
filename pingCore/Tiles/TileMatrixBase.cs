@@ -46,18 +46,14 @@ namespace pingCore.Tiles
                 combinedImage.Format = MagickFormat.Png;
 
                 for (var i = lx; i < rx && i < Size; i++)
-                {
-                    for (var j = ly; j < ry && j < Size; j++)
+                for (var j = ly; j < ry && j < Size; j++)
+                    using (var tile = GetTile(i, j))
                     {
-                        using (var tile = GetTile(i, j))
-                        {
-                            if (tile == null)
-                                continue;
+                        if (tile == null)
+                            continue;
 
-                            combinedImage.Composite(tile, (j - ly) * 255, (i - lx) * 255, CompositeOperator.SrcOver);
-                        }
+                        combinedImage.Composite(tile, (j - ly) * 255, (i - lx) * 255, CompositeOperator.SrcOver);
                     }
-                }
 
                 combinedImage.Resize(255, 255);
                 await combinedImage.WriteAsync(outPath);
