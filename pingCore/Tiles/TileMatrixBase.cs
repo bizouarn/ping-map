@@ -38,27 +38,44 @@ namespace pingCore.Tiles
 
         public virtual async Task CombineImages(int lx, int ly, int rx, int ry, string outPath)
         {
-            Console.WriteLine($"Combined image : ({lx},{ly},{rx},{ry})");
+            Console.WriteLine($"Combined image: ({lx}, {ly}, {rx}, {ry})");
 
-            using (var combinedImage = new MagickImage(MagickColors.Transparent, (rx - lx) * 255, (ry - ly) * 255))
-            {
-                combinedImage.ColorType = ColorType.TrueColorAlpha;
-                combinedImage.Format = MagickFormat.Png;
-
-                for (var i = lx; i < rx && i < Size; i++)
-                for (var j = ly; j < ry && j < Size; j++)
-                    using (var tile = GetTile(i, j))
+            if (rx - lx == 1 && ry - ly == 1)
+                // Copier le fichier plutôt que de le combiner
+                using (var tile = GetTile(lx, ly))
+                {
+                    if (tile != null)
                     {
-                        if (tile == null)
-                            continue;
-
-                        combinedImage.Composite(tile, (j - ly) * 255, (i - lx) * 255, CompositeOperator.SrcOver);
+                        await tile.WriteAsync(outPath);
+                        Console.WriteLine("Image copied.");
                     }
+                    else
+                    {
+                        Console.WriteLine("No tile found at the specified location.");
+                    }
+                }
+            else
+                using (var combinedImage = new MagickImage(MagickColors.Transparent, (rx - lx) * 255, (ry - ly) * 255))
+                {
+                    combinedImage.ColorType = ColorType.TrueColorAlpha;
+                    combinedImage.Format = MagickFormat.Png;
 
-                combinedImage.Resize(255, 255);
-                await combinedImage.WriteAsync(outPath);
-            }
+                    for (var i = lx; i < rx && i < Size; i++)
+                    for (var j = ly; j < ry && j < Size; j++)
+                        using (var tile = GetTile(i, j))
+                        {
+                            if (tile == null)
+                                continue;
+
+                            combinedImage.Composite(tile, (j - ly) * 255, (i - lx) * 255, CompositeOperator.SrcOver);
+                        }
+
+                    combinedImage.Resize(255, 255);
+                    await combinedImage.WriteAsync(outPath);
+                    Console.WriteLine("Images combined.");
+                }
         }
+
 
         protected abstract MagickImage GetTile(int x, int y);
     }
