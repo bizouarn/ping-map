@@ -9,38 +9,34 @@ namespace ResToImage
     internal class Program
     {
         private static async Task Main()
-        {
-            // Obtenir la liste des fichiers dans le répertoire d'entrée
+        { 
             var files = Directory.GetFiles(Constantes.InputDirectory);
+            Directory.CreateDirectory(Constantes.OutputDirectory);
 
-            if(!Directory.Exists(Constantes.OutputDirectory))
-                Directory.CreateDirectory(Constantes.OutputDirectory);
-
-            foreach (var filePath in files)
+            Parallel.ForEach(files, async filePath =>
             {
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
                 var outputFilePath = Path.Combine(Constantes.OutputDirectory, fileName + ".png");
-                if (File.Exists(outputFilePath))
-                    continue;
 
                 await TilesGenerator.GenerateTiles(filePath, outputFilePath);
 
                 Console.WriteLine(fileName);
+            });
+
+            string outputDirectory = Constantes.OutputDirectory;
+            int sourceResolution = 256;
+
+            for (int i = 7; i >= 0; i--)
+            {
+                string sourceDirectory = $"{outputDirectory}\\{i + 1}\\";
+                string targetDirectory = $"{outputDirectory}\\{i}\\";
+
+                TileMatrixBase matrix = new BigTilesMatrix(sourceDirectory, sourceResolution);
+                await matrix.ReduceImageMatrix(2, targetDirectory);
+
+                sourceResolution /= 2;
             }
 
-            TileMatrixBase matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\src\\", 256);
-            await matrix.ReduceImageMatrix(128,$"D:\\GIT\\pingMap\\www\\tiles\\1\\");
-            matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\1\\", 2);
-            await matrix.ReduceImageMatrix(2,$"D:\\GIT\\pingMap\\www\\tiles\\0\\");
-            matrix = new BigTilesMatrix("D:\\GIT\\pingMap\\www\\tiles\\src\\", 256);
-
-            await matrix.ReduceImageMatrix(64,$"D:\\GIT\\pingMap\\www\\tiles\\2\\");
-            await matrix.ReduceImageMatrix(32,$"D:\\GIT\\pingMap\\www\\tiles\\3\\");
-            await matrix.ReduceImageMatrix(16,$"D:\\GIT\\pingMap\\www\\tiles\\4\\");
-            await matrix.ReduceImageMatrix(8,$"D:\\GIT\\pingMap\\www\\tiles\\5\\");
-            await matrix.ReduceImageMatrix(4,$"D:\\GIT\\pingMap\\www\\tiles\\6\\");
-            await matrix.ReduceImageMatrix(2,$"D:\\GIT\\pingMap\\www\\tiles\\7\\");
-            await matrix.ReduceImageMatrix(1,$"D:\\GIT\\pingMap\\www\\tiles\\8\\");
         }
     }
 }

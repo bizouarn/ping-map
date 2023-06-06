@@ -10,7 +10,7 @@ namespace pingCore.Tiles
     {
         private readonly List<MagickImage> _cache = new List<MagickImage>();
         private readonly string[][] _matrix;
-        private readonly string _tempDir = Path.Combine("C:", "TEMP", "IM");
+        private readonly string _tempDir = Path.Combine("%TEMP%", "IM");
 
         public BigTilesMatrix(string dir, int size = 255) : base(size)
         {

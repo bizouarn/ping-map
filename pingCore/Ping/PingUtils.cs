@@ -15,7 +15,8 @@ namespace pingCore.Ping
             byte[] buffer = {1};
             try
             {
-                var reply = await ping.SendPingAsync(ip, PingTiemout, buffer); // Effectue un ping avec un délai de 5 secondes
+                var reply = await ping.SendPingAsync(ip, PingTiemout,
+                    buffer); // Effectue un ping avec un délai de 5 secondes
                 return reply.Status == IPStatus.Success;
             }
             catch (PingException)

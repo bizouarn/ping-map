@@ -22,7 +22,7 @@ namespace pingCore.Tiles
                         await GenerateTiles1(lines, outputFilePath);
                         break;
                     case -1:
-                        await GenerateTilesSrc(lines, outputFilePath);
+                        await GenerateTiles8(lines, outputFilePath);
                         break;
                 }
 
@@ -59,9 +59,9 @@ namespace pingCore.Tiles
             return true;
         }
 
-        private static async Task<bool> GenerateTilesSrc(string[] lines, string outputFilePath)
+        private static async Task<bool> GenerateTiles8(string[] lines, string outputFilePath)
         {
-            var output = GetOutputPath(outputFilePath, "src");
+            var output = GetOutputPath(outputFilePath, "8");
             if (File.Exists(output))
                 return false;
 
