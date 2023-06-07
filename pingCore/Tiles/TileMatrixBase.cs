@@ -45,14 +45,9 @@ namespace pingCore.Tiles
                 using (var tile = GetTile(lx, ly))
                 {
                     if (tile != null)
-                    {
                         await tile.WriteAsync(outPath);
-                        Console.WriteLine("Image copied.");
-                    }
                     else
-                    {
                         Console.WriteLine("No tile found at the specified location.");
-                    }
                 }
             else
                 using (var combinedImage = new MagickImage(MagickColors.Transparent, (rx - lx) * 255, (ry - ly) * 255))
@@ -60,6 +55,8 @@ namespace pingCore.Tiles
                     combinedImage.ColorType = ColorType.TrueColorAlpha;
                     combinedImage.Format = MagickFormat.Png;
 
+                    var tileSize = 255;
+                    
                     for (var i = lx; i < rx && i < Size; i++)
                     for (var j = ly; j < ry && j < Size; j++)
                         using (var tile = GetTile(i, j))
@@ -67,12 +64,14 @@ namespace pingCore.Tiles
                             if (tile == null)
                                 continue;
 
-                            combinedImage.Composite(tile, (j - ly) * 255, (i - lx) * 255, CompositeOperator.SrcOver);
+                            combinedImage.Composite(tile, (j - ly) * tileSize, (i - lx) * tileSize, CompositeOperator.SrcOver);
                         }
 
-                    combinedImage.Resize(255, 255);
+                    if((rx - lx) == 2 && (ry - ly) == 2)
+                        combinedImage.AdaptiveResize(tileSize, tileSize);
+                    else
+                        combinedImage.Resize(tileSize, tileSize);
                     await combinedImage.WriteAsync(outPath);
-                    Console.WriteLine("Images combined.");
                 }
         }
 

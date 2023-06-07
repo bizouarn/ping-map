@@ -50,7 +50,7 @@ namespace pingCore.Tiles
             return ret;
         }
 
-        public void ClearCache()
+        private void ClearCache()
         {
             Directory.Delete(_tempDir, true);
             Directory.CreateDirectory(_tempDir);

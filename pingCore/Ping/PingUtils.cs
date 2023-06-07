@@ -35,7 +35,7 @@ namespace pingCore.Ping
             var filePath = Path.Combine(directoryPath, $"{ip}.txt");
             if (File.Exists(filePath)) return;
 
-            using var writer = new StreamWriter(filePath);
+            await using var writer = new StreamWriter(filePath);
 
             var i = int.Parse(ipTab[0]);
             var j = int.Parse(ipTab[1]);

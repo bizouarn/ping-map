@@ -12,8 +12,8 @@ namespace pingCore
 
         private static async Task Main()
         {
-            var start = "0.0.0.1";
-            var end = "255.255.255.255";
+            const string start = "0.0.0.1";
+            const string end = "255.255.255.255";
 
             var startIP = start.Split('.');
             var endIP = end.Split('.');
