@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
@@ -33,13 +35,26 @@ namespace pingCore.Ping
             if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
 
             var filePath = Path.Combine(directoryPath, $"{ip}.txt");
-            if (File.Exists(filePath)) return;
-
-            await using var writer = new StreamWriter(filePath);
-
             var i = int.Parse(ipTab[0]);
             var j = int.Parse(ipTab[1]);
+            
+            if (File.Exists(filePath))
+            {
+                var fileInfo = new FileInfo(filePath);
+                if (fileInfo.Length == 66048)
+                {
+                    // await AppendPingResults(filePath, i, j);
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine($"Delete {filePath}");
+                    File.Delete(filePath);
+                }
+            }
 
+            await using var writer = new StreamWriter(filePath);
+            
             var tasks = new List<Task<bool>>();
 
             for (var k = 0; k <= 255; k++)
@@ -52,6 +67,37 @@ namespace pingCore.Ping
 
                 await writer.WriteLineAsync();
                 tasks.Clear();
+            }
+
+            await writer.FlushAsync();
+        }
+
+        
+        private static async Task AppendPingResults(string filePath, int i, int j)
+        {
+            var lines = await File.ReadAllLinesAsync(filePath);
+
+            if (!lines.Any(line => line.Contains("0")))
+            {
+                return;
+            }
+            
+            for(var k = 0; k < lines.Length ; k++)
+            {
+                var line = lines[k].ToCharArray();
+                for(var l = 0; l <= 255; l++)
+                {
+                    if(line[l] == '0')
+                        line[l] = await Ping($"{i}.{j}.{k}.{l}") ? '1' : '0';
+                }
+                lines[k] = new string(line);
+            }
+
+            await using var writer = new StreamWriter(filePath);
+
+            foreach (var line in lines)
+            {
+                await writer.WriteLineAsync(line);
             }
 
             await writer.FlushAsync();

@@ -7,13 +7,13 @@ namespace pingCore
 {
     internal class Program
     {
-        private const int MAX_TASK = 64;
+        private const int MAX_TASK = 4;
         private const int DELAY = 1000;
 
         private static async Task Main()
         {
-            const string start = "0.0.0.1";
-            const string end = "255.255.255.255";
+            const string start = "0.0";
+            const string end = "255.255";
 
             var startIP = start.Split('.');
             var endIP = end.Split('.');
@@ -26,16 +26,24 @@ namespace pingCore
                 tasks.Add(new WeakReference(PingUtils.PingRange(i + "." + j)));
                 while (tasks.Count >= MAX_TASK)
                 {
+                    await Task.Delay(DELAY);
                     DeleteListInactiveRef(ref tasks);
-                    await Task.Delay(DELAY * tasks.Count);
+                    if (tasks.Count < MAX_TASK)
+                    {
+                        Console.WriteLine(i + "." + j + ".0.0/16" +
+                                          $" ({tasks.Count}/{MAX_TASK})");
+                        break;
+                    }
+                    await Task.Delay((DELAY / 2) * tasks.Count);
                     Console.WriteLine(i + "." + j + ".0.0/16" +
                                       $" ({tasks.Count}/{MAX_TASK})");
+                    DeleteListInactiveRef(ref tasks);
                 }
             }
 
             while (tasks.Count > 0)
             {
-                await Task.Delay(100);
+                await Task.Delay(DELAY);
                 DeleteListInactiveRef(ref tasks);
             }
         }
