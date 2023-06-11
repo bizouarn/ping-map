@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -59,14 +60,19 @@ namespace pingCore.Ping
 
             for (var k = 0; k <= 255; k++)
             {
-                for (var l = 0; l <= 255; l++) tasks.Add(Ping($"{i}.{j}.{k}.{l}"));
+                for (var l = 0; l <= 255; l++)
+                {
+                    Console.WriteLine($"\t ping {i}.{j}.{k}.{l}");
+                    tasks.Add(Ping($"{i}.{j}.{k}.{l}"));
+                }
 
                 var results = await Task.WhenAll(tasks);
 
-                foreach (var result in results) await writer.WriteAsync(result ? "1" : "0");
+                foreach (var result in results)
+                    await writer.WriteAsync(result ? "1" : "0");
 
+                Console.WriteLine("write : " + filePath);
                 await writer.WriteLineAsync();
-                tasks.Clear();
             }
 
             await writer.FlushAsync();
@@ -87,8 +93,11 @@ namespace pingCore.Ping
                 var line = lines[k].ToCharArray();
                 for(var l = 0; l <= 255; l++)
                 {
-                    if(line[l] == '0')
+                    if (line[l] == '0')
+                    {
+                        Console.WriteLine($"\t ping {i}.{j}.{k}.{l}");
                         line[l] = await Ping($"{i}.{j}.{k}.{l}") ? '1' : '0';
+                    }
                 }
                 lines[k] = new string(line);
             }
