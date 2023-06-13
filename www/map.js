@@ -15,3 +15,7 @@ const tile = L.tileLayer('tiles/{z}/{y}.{x}.png', {
 }).addTo(map);
 
 map.setMaxBounds(bounds); // Définissez les limites maximales de la carte
+
+setTimeout(() => { 
+  map.invalidateSize() // see https://github.com/Leaflet/Leaflet/issues/690
+}, 100)
