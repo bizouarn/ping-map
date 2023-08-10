@@ -55,8 +55,8 @@ namespace pingCore.Tiles
                     combinedImage.ColorType = ColorType.TrueColorAlpha;
                     combinedImage.Format = MagickFormat.Png;
 
-                    var tileSize = 255;
-                    
+                    const int tileSize = 255;
+
                     for (var i = lx; i < rx && i < Size; i++)
                     for (var j = ly; j < ry && j < Size; j++)
                         using (var tile = GetTile(i, j))
@@ -64,10 +64,11 @@ namespace pingCore.Tiles
                             if (tile == null)
                                 continue;
 
-                            combinedImage.Composite(tile, (j - ly) * tileSize, (i - lx) * tileSize, CompositeOperator.SrcOver);
+                            combinedImage.Composite(tile, (j - ly) * tileSize, (i - lx) * tileSize,
+                                CompositeOperator.SrcOver);
                         }
 
-                    if((rx - lx) == 2 && (ry - ly) == 2)
+                    if (rx - lx == 2 && ry - ly == 2)
                         combinedImage.AdaptiveResize(tileSize, tileSize);
                     else
                         combinedImage.Resize(tileSize, tileSize);

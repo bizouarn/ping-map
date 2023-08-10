@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using ImageMagick;
 
@@ -15,11 +16,11 @@ namespace pingCore.Tiles
 
             await GenerateTiles8(lines, outputFilePath);
         }
-        
-        private static async Task GenerateTiles8(string[] lines, string outputFilePath)
+
+        private static async Task GenerateTiles8(IReadOnlyList<string> lines, string outputFilePath)
         {
             var output = GetOutputPath(outputFilePath, "8");
-            var height = lines.Length;
+            var height = lines.Count;
             var width = lines[0].Length;
 
             using (var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), width, height))

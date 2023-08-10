@@ -16,10 +16,8 @@ namespace ResToImage
             Directory.CreateDirectory(outputDirectory);
 
             var listOutput = new HashSet<string>();
-            foreach (var file in Directory.GetFiles(Path.Combine(outputDirectory,"8")))
-            {
+            foreach (var file in Directory.GetFiles(Path.Combine(outputDirectory, "8")))
                 listOutput.Add(Path.GetFileNameWithoutExtension(file));
-            }
 
             Parallel.ForEach(files, async filePath =>
             {
@@ -31,7 +29,7 @@ namespace ResToImage
                 await TilesGenerator.GenerateTiles(filePath, outputFilePath);
                 Console.WriteLine(fileName);
             });
-            
+
             var sourceResolution = 256;
 
             for (var i = 7; i >= 0; i--)

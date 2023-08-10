@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -10,7 +9,7 @@ namespace pingCore.Ping
 {
     public class PingUtils
     {
-        private const int PingTiemout = 1000;
+        private const int PingTimeout = 1000;
 
         private static async Task<bool> Ping(string ip)
         {
@@ -18,9 +17,16 @@ namespace pingCore.Ping
             byte[] buffer = {1};
             try
             {
-                var reply = await ping.SendPingAsync(ip, PingTiemout,
-                    buffer); // Effectue un ping avec un délai de 5 secondes
-                return reply.Status == IPStatus.Success;
+                try
+                {
+                    var reply = await ping.SendPingAsync(ip, PingTimeout,
+                        buffer); // Effectue un ping avec un délai de 5 secondes
+                    return reply.Status == IPStatus.Success;
+                }
+                catch (ArgumentException)
+                {
+                    return false;
+                }
             }
             catch (PingException)
             {
@@ -38,7 +44,7 @@ namespace pingCore.Ping
             var filePath = Path.Combine(directoryPath, $"{ip}.txt");
             var i = int.Parse(ipTab[0]);
             var j = int.Parse(ipTab[1]);
-            
+
             if (File.Exists(filePath))
             {
                 var fileInfo = new FileInfo(filePath);
@@ -47,15 +53,13 @@ namespace pingCore.Ping
                     // await AppendPingResults(filePath, i, j);
                     return;
                 }
-                else
-                {
-                    Console.WriteLine($"Delete {filePath}");
-                    File.Delete(filePath);
-                }
+
+                Console.WriteLine($"Delete {filePath}");
+                File.Delete(filePath);
             }
 
             await using var writer = new StreamWriter(filePath);
-            
+
             var tasks = new List<Task<bool>>();
 
             for (var k = 0; k <= 255; k++)
@@ -78,36 +82,29 @@ namespace pingCore.Ping
             await writer.FlushAsync();
         }
 
-        
+
         private static async Task AppendPingResults(string filePath, int i, int j)
         {
             var lines = await File.ReadAllLinesAsync(filePath);
 
-            if (!lines.Any(line => line.Contains("0")))
-            {
-                return;
-            }
-            
-            for(var k = 0; k < lines.Length ; k++)
+            if (!lines.Any(line => line.Contains("0"))) return;
+
+            for (var k = 0; k < lines.Length; k++)
             {
                 var line = lines[k].ToCharArray();
-                for(var l = 0; l <= 255; l++)
-                {
+                for (var l = 0; l <= 255; l++)
                     if (line[l] == '0')
                     {
                         Console.WriteLine($"\t ping {i}.{j}.{k}.{l}");
                         line[l] = await Ping($"{i}.{j}.{k}.{l}") ? '1' : '0';
                     }
-                }
+
                 lines[k] = new string(line);
             }
 
             await using var writer = new StreamWriter(filePath);
 
-            foreach (var line in lines)
-            {
-                await writer.WriteLineAsync(line);
-            }
+            foreach (var line in lines) await writer.WriteLineAsync(line);
 
             await writer.FlushAsync();
         }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using pingCore.Ping;
 
@@ -21,9 +18,7 @@ namespace pingCore
 
             for (var i = int.Parse(startIP[0]); i <= int.Parse(endIP[0]); i++)
             for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
-            {
                 await PingUtils.PingRange(i + "." + j);
-            }
         }
     }
 }
