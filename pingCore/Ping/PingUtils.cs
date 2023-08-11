@@ -50,7 +50,7 @@ namespace pingCore.Ping
                 var fileInfo = new FileInfo(filePath);
                 if (fileInfo.Length == 66048)
                 {
-                    // await AppendPingResults(filePath, i, j);
+                    await AppendPingResults(filePath, i, j);
                     return;
                 }
 
