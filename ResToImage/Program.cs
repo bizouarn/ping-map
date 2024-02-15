@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using pingCore;
-using pingCore.Tiles;
+using Ping.Core;
+using Ping.Core.Tiles;
 
 namespace ResToImage
 {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using ImageMagick;
 
-namespace pingCore.Tiles
+namespace Ping.Core.Tiles
 {
     public class BigTilesMatrix : TileMatrixBase, IDisposable
     {

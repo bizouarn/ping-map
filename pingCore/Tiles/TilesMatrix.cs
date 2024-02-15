@@ -2,7 +2,7 @@
 using System.IO;
 using ImageMagick;
 
-namespace pingCore.Tiles
+namespace Ping.Core.Tiles
 {
     public class TilesMatrix : TileMatrixBase, IDisposable
     {

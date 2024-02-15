@@ -1,24 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using pingCore.Ping;
 
-namespace pingCore
+namespace Ping.Core
 {
     internal class Program
     {
-        private const int MAX_TASK = 64;
-        private const int DELAY = 200;
+        private const int MAX_TASK = 2;
 
-        private static async Task Main()
+        private static async Task Main(string[] args)
         {
-            const string start = "0.0";
-            const string end = "255.255";
-
+            string start = "0.0";
+            string end = "255.255";
+            if (args.Length == 1)
+            {
+                if (args[0].Contains("-"))
+                {
+                    var range = args[0].Split("-");
+                    start = range[0]+".0";
+                    end = range[1]+".255";
+                }
+                else
+                {
+                    start = args[0]+".0";
+                    end = args[0]+".255";
+                }
+            }
+            
             var startIP = start.Split('.');
             var endIP = end.Split('.');
 
+            var tasks = new List<Task>();
+
             for (var i = int.Parse(startIP[0]); i <= int.Parse(endIP[0]); i++)
-            for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
-                await PingUtils.PingRange(i + "." + j);
+                for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
+                {
+                    Console.WriteLine("Ping : " + i + "." + j);
+                    tasks.Add(PingUtils.PingRange(i + "." + j));
+                    if (tasks.Count >= MAX_TASK)
+                    {
+                        await Task.WhenAll(tasks);
+                        tasks.Clear();
+                    }
+                }
+
+            await Task.WhenAll(tasks);
         }
     }
 }

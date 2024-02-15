@@ -1,44 +1,42 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using ImageMagick;
 
-namespace pingCore.Tiles
+namespace Ping.Core.Tiles
 {
     public class TilesGenerator
     {
         public static async Task GenerateTiles(string inputFilePath, string outputFilePath)
         {
-            var lines = await File.ReadAllLinesAsync(inputFilePath);
+            var bits = await File.ReadAllBytesAsync(inputFilePath);
 
-            if (lines.Length <= 0)
+            if (bits.Length <= 0)
                 return;
 
-            await GenerateTiles8(lines, outputFilePath);
+            await GenerateTiles8(bits, outputFilePath);
         }
 
-        private static async Task GenerateTiles8(IReadOnlyList<string> lines, string outputFilePath)
+        private static async Task GenerateTiles8(byte[] bits, string outputFilePath)
         {
             var output = GetOutputPath(outputFilePath, "8");
-            var height = lines.Count;
-            var width = lines[0].Length;
+            var height = bits.Length / bits.Length;
+            var width = height;
 
-            using (var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), width, height))
+            using var image = new MagickImage(MagickColor.FromRgb(0, 0, 0), width, height);
+            image.Format = MagickFormat.Png;
+            var drawable = new Drawables().FillColor(Constantes.Green);
+
+            var index = 0;
+            for (var y = 0; y < height; y++)
             {
-                image.Format = MagickFormat.Png;
-                var drawable = new Drawables().FillColor(Constantes.Green);
-
-                for (var y = 0; y < height; y++)
-                {
-                    var line = lines[y].Trim();
-                    for (var x = 0; x < width; x++)
-                        if (line[x] == '1')
-                            drawable.Point(x, y);
-                }
-
-                image.Draw(drawable);
-                await image.WriteAsync(output); // Enregistrer l'image au format PNG
+                for (var x = 0; x < width; x++)
+                    if (bits[index] == 1)
+                        drawable.Point(x, y);
+                index++;
             }
+
+            image.Draw(drawable);
+            await image.WriteAsync(output);
         }
 
         private static string GetOutputPath(string outputFilePath, string subDir)

@@ -1,6 +1,6 @@
 using ImageMagick;
 
-namespace pingCore
+namespace Ping.Core
 {
     public class Constantes
     {
