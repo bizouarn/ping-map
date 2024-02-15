@@ -9,10 +9,12 @@ namespace Ping.Core
 {
     public class PingUtils
     {
-        private const int PingTimeout = 1000;
+        private static DateTime _lastLog = DateTime.MinValue;
 
         private static async Task<bool> Ping(IpV4 ip)
         {
+            var pingTimeout = TimeSpan.FromMilliseconds(30);
+
             if (!ip.IsValid())
                 return false;
             if (ip.address[0] == 127)
@@ -22,7 +24,11 @@ namespace Ping.Core
             byte[] buffer = { 1 };
             try
             {
-                var reply = await ping.SendPingAsync(ip.ToString(), PingTimeout, buffer);
+                if(_lastLog.AddSeconds(10) < DateTime.Now){
+                    Console.WriteLine("ping : "+ ip.ToString());
+                    _lastLog = DateTime.Now;
+                }
+                var reply = await ping.SendPingAsync(ip.ToString(), pingTimeout, buffer);
                 return reply.Status == IPStatus.Success;
             }
             catch (PingException)
@@ -61,26 +67,16 @@ namespace Ping.Core
 
             var byteArray = new byte[256 * 256];
             var index = 0;
-            var tasks = new List<Task>();
             for (var k = 0; k <= 255; k++)
             {
-                if (k % 25 == 0)
+                if(k % 25 == 0)
                     Console.WriteLine("work : " + filePath + " " + k * 100 / 255 + "%");
                 for (var l = 0; l <= 255; l++)
                 {
-                    var lCopy = l;
-                    var kCopy = k;
-                    var indexCopy = index;
-                    var task = Task.Run(async () =>
-                    {
-                        byteArray[indexCopy] = await Ping(new IpV4(i, j, kCopy, lCopy)) ? (byte)1 : (byte)0;
-                    });
-                    tasks.Add(task);
+                    byteArray[index] = await Ping(new IpV4(i, j, l, k)) ? (byte)1 : (byte)0;
                     index++;
                 }
             }
-
-            await Task.WhenAll(tasks);
 
             await File.WriteAllBytesAsync(filePath, byteArray);
 
@@ -96,7 +92,6 @@ namespace Ping.Core
 
             var byteArray = new byte[256 * 256];
             var index = 0;
-            var tasks = new List<Task>();
             for (var k = 0; k <= 255; k++)
             {
                 if (k % 25 == 0)
@@ -105,21 +100,12 @@ namespace Ping.Core
                 {
                     if (file[index] == 0)
                     {
-                        var kCopy = k;
-                        var lCopy = l;
-                        var indexCopy = index;
-                        var task = Task.Run(async () =>
-                        {
-                            byteArray[indexCopy] = await Ping(new IpV4(i, j, kCopy, lCopy)) ? (byte)1 : (byte)0;
-                        });
-                        tasks.Add(task);
+                        byteArray[index] = await Ping(new IpV4(i, j, k, l)) ? (byte)1 : (byte)0;
                     }
 
                     index++;
                 }
             }
-
-            await Task.WhenAll(tasks);
 
             await File.WriteAllBytesAsync(filePath, byteArray);
             Console.WriteLine("write : " + filePath);

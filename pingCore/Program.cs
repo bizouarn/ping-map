@@ -7,7 +7,7 @@ namespace Ping.Core
 {
     internal class Program
     {
-        private const int MAX_TASK = 2;
+        private const int MAX_TASK = 5;
 
         private static async Task Main(string[] args)
         {
@@ -32,11 +32,20 @@ namespace Ping.Core
             var endIP = end.Split('.');
 
             var tasks = new List<Task>();
-
+            var listRange = new List<(int, int)>();
             for (var i = int.Parse(startIP[0]); i <= int.Parse(endIP[0]); i++)
                 for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
                 {
-                    Console.WriteLine("Ping : " + i + "." + j);
+                    listRange.Add((i, j));                   
+                }
+
+            Random random = new Random();
+            while (listRange.Count > 0)
+            {
+                int indiceAleatoire = random.Next(0, listRange.Count);
+                if(indiceAleatoire < listRange.Count){
+                    (var i, var j) = listRange[indiceAleatoire];
+                    listRange.RemoveAt(indiceAleatoire);
                     tasks.Add(PingUtils.PingRange(i + "." + j));
                     if (tasks.Count >= MAX_TASK)
                     {
@@ -44,6 +53,7 @@ namespace Ping.Core
                         tasks.Clear();
                     }
                 }
+            }
 
             await Task.WhenAll(tasks);
         }
