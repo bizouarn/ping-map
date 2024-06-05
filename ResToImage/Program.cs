@@ -33,8 +33,8 @@ internal class Program
 
         for (var i = 7; i >= 0; i--)
         {
-            var sourceDirectory = $@"{outputDirectory}\{i + 1}\";
-            var targetDirectory = $@"{outputDirectory}\{i}\";
+            var sourceDirectory = Path.Combine(outputDirectory, (i + 1) + "");
+            var targetDirectory = Path.Combine(outputDirectory, i + "");
 
             TileMatrixBase matrix;
             if (sourceResolution > 8)
