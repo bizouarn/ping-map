@@ -29,8 +29,6 @@ internal class Program
             Console.WriteLine(fileName);
         });
 
-        return;
-
         var sourceResolution = 256;
 
         for (var i = 7; i >= 0; i--)
