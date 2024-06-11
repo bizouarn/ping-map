@@ -6,7 +6,7 @@ namespace Ping.Core;
 
 internal class Program
 {
-    private const int MAX_TASK = 5;
+    private const int MAX_TASK = 255;
 
     private static async Task Main(string[] args)
     {
