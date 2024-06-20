@@ -22,8 +22,8 @@ internal class Program
         await Parallel.ForEachAsync(files, async (filePath, _) => {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
             var outputFilePath = Path.Combine(outputDirectory, fileName + ".png");
-            /*if (listOutput.Contains(fileName))
-                return;*/
+            if (listOutput.Contains(fileName))
+                return;
 
             await TilesGenerator.GenerateTiles(filePath, outputFilePath);
             Console.WriteLine(fileName);
