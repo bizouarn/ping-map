@@ -10,7 +10,7 @@ public class BigTilesMatrix : TileMatrixBase, IDisposable
 {
     private readonly List<MagickImage> _cache = [];
     private readonly string[][] _matrix;
-    private readonly string _tempDir = Path.Combine("%TEMP%", "IM");
+    private readonly string _tempDir = Path.Combine("TEMP", "IM");
 
     public BigTilesMatrix(string dir, int size = 255) : base(size)
     {
@@ -64,6 +64,5 @@ public class BigTilesMatrix : TileMatrixBase, IDisposable
     public override async Task CombineImages(int lx, int ly, int rx, int ry, string outPath)
     {
         await base.CombineImages(lx, ly, rx, ry, outPath);
-        ClearCache();
     }
 }
