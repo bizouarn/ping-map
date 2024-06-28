@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pingCore", "pingCore\pingCore.csproj", "{494CDFE3-9878-417B-AE28-EFC1392759FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ping.Core", "pingCore\Ping.Core.csproj", "{494CDFE3-9878-417B-AE28-EFC1392759FD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResToImage", "ResToImage\ResToImage.csproj", "{7907283F-CAA3-4818-AC74-F93136D6DB1D}"
 EndProject
