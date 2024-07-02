@@ -19,21 +19,22 @@ internal class Program
         foreach (var file in Directory.GetFiles(Path.Combine(outputDirectory, "8")))
             listOutput.Add(Path.GetFileNameWithoutExtension(file));
 
-        await Parallel.ForEachAsync(files, async (filePath, _) => {
+        await Parallel.ForEachAsync(files, async (filePath, _) =>
+        {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
             var outputFilePath = Path.Combine(outputDirectory, fileName + ".png");
-            if (listOutput.Contains(fileName))
-                return;
+            /*if (listOutput.Contains(fileName))
+                return;*/
 
             await TilesGenerator.GenerateTiles(filePath, outputFilePath);
             Console.WriteLine(fileName);
         });
 
-        var sourceResolution = 256;
+        short sourceResolution = 256;
 
         for (var i = 7; i >= 0; i--)
         {
-            var sourceDirectory = Path.Combine(outputDirectory, (i + 1) + "");
+            var sourceDirectory = Path.Combine(outputDirectory, i + 1 + "");
             var targetDirectory = Path.Combine(outputDirectory, i + "");
 
             TileMatrixBase matrix;

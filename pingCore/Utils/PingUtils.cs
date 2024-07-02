@@ -50,8 +50,8 @@ public class PingUtils
         if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
 
         var filePath = Path.Combine(directoryPath, $"{ip}.bin");
-        var i = int.Parse(ipTab[0]);
-        var j = int.Parse(ipTab[1]);
+        var i = (byte)short.Parse(ipTab[0]);
+        var j = (byte)short.Parse(ipTab[1]);
 
         if (File.Exists(filePath))
         {
@@ -68,11 +68,11 @@ public class PingUtils
 
         var byteArray = new byte[256 * 256];
         var index = 0;
-        for (var k = 0; k <= 255; k++)
+        foreach (var k in Constantes.ByteRange)
         {
             if (k % 25 == 0)
                 Console.WriteLine("work : " + filePath + " " + k * 100 / 255 + "%");
-            for (var l = 0; l <= 255; l++)
+            foreach (var l in Constantes.ByteRange)
             {
                 byteArray[index] = await Ping(new IpV4(i, j, l, k)) ? (byte) 1 : (byte) 0;
                 index++;
@@ -85,7 +85,7 @@ public class PingUtils
     }
 
 
-    private static async Task AppendPingResults(string filePath, int i, int j)
+    private static async Task AppendPingResults(string filePath, byte i, byte j)
     {
         var file = await File.ReadAllBytesAsync(filePath);
 
@@ -93,14 +93,13 @@ public class PingUtils
 
         var byteArray = new byte[256 * 256];
         var index = 0;
-        for (var k = 0; k <= 255; k++)
+        foreach (var k in Constantes.ByteRange)
         {
             if (k % 25 == 0)
                 Console.WriteLine("work : " + filePath + " " + k * 100 / 255 + "%");
-            for (var l = 0; l <= 255; l++)
+            foreach (var l in Constantes.ByteRange)
             {
                 if (file[index] == 0) byteArray[index] = await Ping(new IpV4(i, j, k, l)) ? (byte) 1 : (byte) 0;
-
                 index++;
             }
         }

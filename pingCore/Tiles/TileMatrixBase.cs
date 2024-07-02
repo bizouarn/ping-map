@@ -10,25 +10,26 @@ public abstract class TileMatrixBase
 {
     public readonly int Size;
 
-    protected TileMatrixBase(int size)
+    protected TileMatrixBase(short size)
     {
         Size = size;
     }
 
-    public async Task ReduceImageMatrix(int size, string outPath)
+    public async Task ReduceImageMatrix(short size, string outPath)
     {
         Directory.CreateDirectory(outPath);
 
-        var x = 0;
-        var y = 0;
+        short x = 0;
+        short y = 0;
 
-        for (var i = 0; i < Size / size; i++)
+        for (short i = 0; i < Size / size; i++)
         {
             var taskList = new List<Task>();
-            for (var j = 0; j < Size / size; j++)
+            for (short j = 0; j < Size / size; j++)
             {
                 taskList.Add(
-                    CombineImages(i * size, j * size, i * size + size, j * size + size,
+                    CombineImages((short) (i * size), (short) (j * size), (short) (i * size + size),
+                        (short) (j * size + size),
                         Path.Combine(outPath, $"{x}.{y}.png"))
                 );
 
@@ -42,7 +43,7 @@ public abstract class TileMatrixBase
         }
     }
 
-    public virtual async Task CombineImages(int lx, int ly, int rx, int ry, string outPath)
+    public virtual async Task CombineImages(short lx, short ly, short rx, short ry, string outPath)
     {
         Console.WriteLine($"Combined image: ({lx}, {ly}, {rx}, {ry})");
 
@@ -81,5 +82,5 @@ public abstract class TileMatrixBase
         }
     }
 
-    protected abstract MagickImage GetTile(int x, int y);
+    protected abstract MagickImage GetTile(short x, short y);
 }

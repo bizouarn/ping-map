@@ -8,7 +8,7 @@ public class TilesMatrix : TileMatrixBase, IDisposable
 {
     private readonly MagickImage[][] _matrix;
 
-    public TilesMatrix(string dir, int size = 255) : base(size)
+    public TilesMatrix(string dir, short size = 255) : base(size)
     {
         _matrix = new MagickImage[size][];
 
@@ -33,7 +33,7 @@ public class TilesMatrix : TileMatrixBase, IDisposable
             image?.Dispose();
     }
 
-    protected override MagickImage GetTile(int x, int y)
+    protected override MagickImage GetTile(short x, short y)
     {
         return _matrix[x][y];
     }
