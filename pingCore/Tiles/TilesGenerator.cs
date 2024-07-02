@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using ImageMagick;
@@ -17,7 +17,7 @@ public class TilesGenerator
 
         var containsZero = bits.ContainsOneBit(0);
         var containsOne = bits.ContainsOneBit(1);
-        var size = (int)Math.Round(Math.Sqrt(bits.Length));
+        var size = (short)Math.Round(Math.Sqrt(bits.Length));
         const int desiredSize = 256;
 
         MagickImage image;
@@ -28,13 +28,13 @@ public class TilesGenerator
         else
             image = GenerateColorTiles(Constantes.Black, size);
         var output = GetOutputPath(outputFilePath, "8");
-        if(image.Height != desiredSize)
+        if (image.Height != desiredSize)
             image.Scale(desiredSize, desiredSize);
         await image.WriteAsync(output);
         image.Dispose();
     }
 
-    private static MagickImage GenerateTiles8(ReadOnlySpan<byte> bits, int size)
+    private static MagickImage GenerateTiles8(ReadOnlySpan<byte> bits, short size)
     {
         var image = new MagickImage(Constantes.Black, size, size);
         image.Format = MagickFormat.Png;
@@ -42,20 +42,18 @@ public class TilesGenerator
 
         var index = 0;
         for (var y = 0; y < size; y++)
+        for (var x = 0; x < size; x++)
         {
-            for (var x = 0; x < size; x++)
-            {
-                if (bits[index] == (byte) 1)
-                    drawable.Point(x, y);
-                index++;
-            }
+            if (bits[index] == 1)
+                drawable.Point(x, y);
+            index++;
         }
 
         image.Draw(drawable);
         return image;
     }
 
-    private static MagickImage GenerateColorTiles(MagickColor color, int size)
+    private static MagickImage GenerateColorTiles(MagickColor color, short size)
     {
         var image = new MagickImage(color, size, size);
         image.Format = MagickFormat.Png;

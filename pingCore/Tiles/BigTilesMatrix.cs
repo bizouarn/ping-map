@@ -12,7 +12,7 @@ public class BigTilesMatrix : TileMatrixBase, IDisposable
     private readonly string[][] _matrix;
     private readonly string _tempDir = Path.Combine("TEMP", "IM");
 
-    public BigTilesMatrix(string dir, int size = 255) : base(size)
+    public BigTilesMatrix(string dir, short size = 255) : base(size)
     {
         Directory.CreateDirectory(_tempDir);
         MagickNET.SetTempDirectory(_tempDir);
@@ -39,7 +39,7 @@ public class BigTilesMatrix : TileMatrixBase, IDisposable
         ClearCache();
     }
 
-    protected override MagickImage GetTile(int x, int y)
+    protected override MagickImage GetTile(short x, short y)
     {
         var fileName = _matrix[x][y];
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
@@ -61,7 +61,7 @@ public class BigTilesMatrix : TileMatrixBase, IDisposable
         _cache.Clear();
     }
 
-    public override async Task CombineImages(int lx, int ly, int rx, int ry, string outPath)
+    public override async Task CombineImages(short lx, short ly, short rx, short ry, string outPath)
     {
         await base.CombineImages(lx, ly, rx, ry, outPath);
     }
