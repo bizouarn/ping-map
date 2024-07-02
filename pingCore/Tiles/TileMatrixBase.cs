@@ -8,7 +8,7 @@ namespace Ping.Core.Tiles;
 
 public abstract class TileMatrixBase
 {
-    public readonly int Size;
+    public readonly short Size;
 
     protected TileMatrixBase(short size)
     {
@@ -43,7 +43,7 @@ public abstract class TileMatrixBase
         }
     }
 
-    public virtual async Task CombineImages(short lx, short ly, short rx, short ry, string outPath)
+    public async Task CombineImages(short lx, short ly, short rx, short ry, string outPath)
     {
         Console.WriteLine($"Combined image: ({lx}, {ly}, {rx}, {ry})");
 

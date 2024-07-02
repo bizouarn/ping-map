@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
-namespace Ping.Core;
+namespace Ping.Core.Utils;
 
-public class PingUtils
+public static class PingUtils
 {
     private static DateTime _lastLog = DateTime.MinValue;
 
@@ -16,7 +16,7 @@ public class PingUtils
 
         if (!ip.IsValid())
             return false;
-        if (ip.address[0] == 127)
+        if (ip.Address[0] == 127)
             return true;
 
         using var ping = new System.Net.NetworkInformation.Ping();
@@ -50,8 +50,8 @@ public class PingUtils
         if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
 
         var filePath = Path.Combine(directoryPath, $"{ip}.bin");
-        var i = (byte)short.Parse(ipTab[0]);
-        var j = (byte)short.Parse(ipTab[1]);
+        var i = (byte) short.Parse(ipTab[0]);
+        var j = (byte) short.Parse(ipTab[1]);
 
         if (File.Exists(filePath))
         {

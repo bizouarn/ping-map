@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ping.Core.Utils;
 
 namespace Ping.Core;
 
 internal class Program
 {
-    private const int MAX_TASK = 255;
+    private const int _maxTask = 255;
 
     private static async Task Main(string[] args)
     {
@@ -27,13 +28,13 @@ internal class Program
             }
         }
 
-        var startIP = start.Split('.');
-        var endIP = end.Split('.');
+        var startIp = start.Split('.');
+        var endIp = end.Split('.');
 
         var tasks = new List<Task>();
         var listRange = new List<(int, int)>();
-        for (var i = int.Parse(startIP[0]); i <= int.Parse(endIP[0]); i++)
-        for (var j = int.Parse(startIP[1]); j <= int.Parse(endIP[1]); j++)
+        for (var i = int.Parse(startIp[0]); i <= int.Parse(endIp[0]); i++)
+        for (var j = int.Parse(startIp[1]); j <= int.Parse(endIp[1]); j++)
             listRange.Add((i, j));
 
         var random = new Random();
@@ -45,7 +46,7 @@ internal class Program
                 var (i, j) = listRange[indiceAleatoire];
                 listRange.RemoveAt(indiceAleatoire);
                 tasks.Add(PingUtils.PingRange(i + "." + j));
-                if (tasks.Count >= MAX_TASK)
+                if (tasks.Count >= _maxTask)
                 {
                     await Task.WhenAll(tasks);
                     tasks.Clear();

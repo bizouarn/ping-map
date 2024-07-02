@@ -17,7 +17,7 @@ public class TilesGenerator
 
         var containsZero = bits.ContainsOneBit(0);
         var containsOne = bits.ContainsOneBit(1);
-        var size = (short)Math.Round(Math.Sqrt(bits.Length));
+        var size = (short) Math.Round(Math.Sqrt(bits.Length));
         const int desiredSize = 256;
 
         MagickImage image;

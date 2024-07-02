@@ -16,10 +16,7 @@ public class Constantes
     private static byte[] GetByteArray()
     {
         var ret = new List<byte>();
-        foreach (byte val in Enumerable.Range(byte.MinValue, byte.MaxValue))
-        {
-            ret.Add(val);
-        }
+        foreach (byte val in Enumerable.Range(byte.MinValue, byte.MaxValue)) ret.Add(val);
         return ret.ToArray();
     }
 }
