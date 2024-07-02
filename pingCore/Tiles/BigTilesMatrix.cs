@@ -60,9 +60,4 @@ public class BigTilesMatrix : TileMatrixBase, IDisposable
 
         _cache.Clear();
     }
-
-    public override async Task CombineImages(short lx, short ly, short rx, short ry, string outPath)
-    {
-        await base.CombineImages(lx, ly, rx, ry, outPath);
-    }
 }
