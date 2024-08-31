@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Ping.Core.Utils;
 
@@ -45,7 +46,13 @@ internal class Program
             {
                 var (i, j) = listRange[indiceAleatoire];
                 listRange.RemoveAt(indiceAleatoire);
-                tasks.Add(PingUtils.PingRange(i + "." + j));
+                
+                var directoryPath = Constantes.InputDirectory;
+                var ip = i + "." + j;
+                var filePath = Path.Combine(directoryPath, $"{ip}.bin");
+                if(!File.Exists(filePath))
+                    tasks.Add(PingUtils.PingRange(ip));
+
                 if (tasks.Count >= _maxTask)
                 {
                     await Task.WhenAll(tasks);
