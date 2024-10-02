@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Threading;
 using Ping.Core.Utils;
 
 namespace Ping.Core;
@@ -9,6 +10,7 @@ namespace Ping.Core;
 internal class Program
 {
     private const int _maxTask = 255;
+    private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(_maxTask);
 
     private static async Task Main(string[] args)
     {
@@ -35,8 +37,8 @@ internal class Program
         var tasks = new List<Task>();
         var listRange = new List<(int, int)>();
         for (var i = int.Parse(startIp[0]); i <= int.Parse(endIp[0]); i++)
-        for (var j = int.Parse(startIp[1]); j <= int.Parse(endIp[1]); j++)
-            listRange.Add((i, j));
+            for (var j = int.Parse(startIp[1]); j <= int.Parse(endIp[1]); j++)
+                listRange.Add((i, j));
 
         var random = new Random();
         while (listRange.Count > 0)
@@ -46,21 +48,33 @@ internal class Program
             {
                 var (i, j) = listRange[indiceAleatoire];
                 listRange.RemoveAt(indiceAleatoire);
-                
+
                 var directoryPath = Constantes.InputDirectory;
                 var ip = i + "." + j;
                 var filePath = Path.Combine(directoryPath, $"{ip}.bin");
-                if(!File.Exists(filePath))
-                    tasks.Add(PingUtils.PingRange(ip));
 
-                if (tasks.Count >= _maxTask)
+                if (!File.Exists(filePath))
                 {
-                    await Task.WhenAll(tasks);
-                    tasks.Clear();
+                    // Attendre l'autorisation du sémaphore avant de lancer une nouvelle tâche
+                    await _semaphore.WaitAsync();
+
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await PingUtils.PingRange(ip);
+                        }
+                        finally
+                        {
+                            // Libérer une place dans le sémaphore une fois la tâche terminée
+                            _semaphore.Release();
+                        }
+                    }));
                 }
             }
         }
 
+        // Attendre que toutes les tâches soient complétées
         await Task.WhenAll(tasks);
     }
 }
