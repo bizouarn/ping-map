@@ -12,7 +12,7 @@ public static class PingUtils
 
     private static async Task<bool> Ping(IpV4 ip)
     {
-        var pingTimeout = TimeSpan.FromMilliseconds(200);
+        var pingTimeout = TimeSpan.FromMilliseconds(1000);
 
         if (!ip.IsValid())
             return false;

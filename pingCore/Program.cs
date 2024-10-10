@@ -53,24 +53,22 @@ internal class Program
                 var ip = i + "." + j;
                 var filePath = Path.Combine(directoryPath, $"{ip}.bin");
 
-                if (!File.Exists(filePath))
-                {
-                    // Attendre l'autorisation du sémaphore avant de lancer une nouvelle tâche
-                    await _semaphore.WaitAsync();
+                
+                // Attendre l'autorisation du sémaphore avant de lancer une nouvelle tâche
+                await _semaphore.WaitAsync();
 
-                    tasks.Add(Task.Run(async () =>
+                tasks.Add(Task.Run(async () =>
+                {
+                    try
                     {
-                        try
-                        {
-                            await PingUtils.PingRange(ip);
-                        }
-                        finally
-                        {
-                            // Libérer une place dans le sémaphore une fois la tâche terminée
-                            _semaphore.Release();
-                        }
-                    }));
-                }
+                        await PingUtils.PingRange(ip);
+                    }
+                    finally
+                    {
+                        // Libérer une place dans le sémaphore une fois la tâche terminée
+                        _semaphore.Release();
+                    }
+                }));
             }
         }
 
