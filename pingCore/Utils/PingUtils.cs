@@ -9,6 +9,7 @@ namespace Ping.Core.Utils;
 public static class PingUtils
 {
     private static DateTime _lastLog = DateTime.MinValue;
+    private static readonly byte[] _buffer = [1];
 
     private static async Task<bool> Ping(IpV4 ip)
     {
@@ -20,7 +21,7 @@ public static class PingUtils
             return true;
 
         using var ping = new System.Net.NetworkInformation.Ping();
-        byte[] buffer = [1];
+        
         try
         {
             if (_lastLog.AddSeconds(10) < DateTime.Now)
@@ -29,7 +30,7 @@ public static class PingUtils
                 _lastLog = DateTime.Now;
             }
 
-            var reply = await ping.SendPingAsync(ip.ToString(), pingTimeout, buffer);
+            var reply = await ping.SendPingAsync(ip.ToString(), pingTimeout, _buffer);
             return reply.Status == IPStatus.Success;
         }
         catch (PingException)

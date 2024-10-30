@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -22,15 +22,20 @@ public abstract class TileMatrixBase
         short x = 0;
         short y = 0;
 
+        var taskList = new Task[Size];
+        Array.Fill(taskList, Task.CompletedTask);
+
         for (short i = 0; i < Size / size; i++)
         {
-            var taskList = new List<Task>();
+            
             for (short j = 0; j < Size / size; j++)
             {
-                taskList.Add(
-                    CombineImages((short) (i * size), (short) (j * size), (short) (i * size + size),
-                        (short) (j * size + size),
-                        Path.Combine(outPath, $"{x}.{y}.png"))
+                taskList[j] = CombineImages(
+                    (short) (i * size), 
+                    (short) (j * size), 
+                    (short) (i * size + size),
+                    (short) (j * size + size),
+                    Path.Combine(outPath, $"{x}.{y}.png")
                 );
 
                 y++;
