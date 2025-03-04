@@ -11,6 +11,6 @@ public static class ByteUtils
 
     public static bool ContainsOneBit(this byte[] byteArray, byte value)
     {
-        return ContainsOneBit((ReadOnlySpan<byte>) byteArray, value);
+        return ContainsOneBit((ReadOnlySpan<byte>)byteArray, value);
     }
 }

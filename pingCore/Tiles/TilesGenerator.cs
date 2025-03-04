@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using ImageMagick;
+using ImageMagick.Drawing;
 using Ping.Core.Utils;
 
 namespace Ping.Core.Tiles;
@@ -17,7 +18,7 @@ public class TilesGenerator
 
         var containsZero = bits.ContainsOneBit(0);
         var containsOne = bits.ContainsOneBit(1);
-        var size = (short) Math.Round(Math.Sqrt(bits.Length));
+        var size = (uint)Math.Round(Math.Sqrt(bits.Length));
         const int desiredSize = 256;
 
         MagickImage image;
@@ -34,7 +35,7 @@ public class TilesGenerator
         image.Dispose();
     }
 
-    private static MagickImage GenerateTiles8(ReadOnlySpan<byte> bits, short size)
+    private static MagickImage GenerateTiles8(ReadOnlySpan<byte> bits, uint size)
     {
         var image = new MagickImage(Constantes.Black, size, size);
         image.Format = MagickFormat.Png;
@@ -53,7 +54,7 @@ public class TilesGenerator
         return image;
     }
 
-    private static MagickImage GenerateColorTiles(MagickColor color, short size)
+    private static MagickImage GenerateColorTiles(IMagickColor<ushort> color, uint size)
     {
         var image = new MagickImage(color, size, size);
         image.Format = MagickFormat.Png;

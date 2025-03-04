@@ -21,7 +21,7 @@ public static class PingUtils
             return true;
 
         using var ping = new System.Net.NetworkInformation.Ping();
-        
+
         try
         {
             if (_lastLog.AddSeconds(10) < DateTime.Now)
@@ -51,8 +51,8 @@ public static class PingUtils
         if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
 
         var filePath = Path.Combine(directoryPath, $"{ip}.bin");
-        var i = (byte) short.Parse(ipTab[0]);
-        var j = (byte) short.Parse(ipTab[1]);
+        var i = (byte)short.Parse(ipTab[0]);
+        var j = (byte)short.Parse(ipTab[1]);
 
         if (File.Exists(filePath))
         {
@@ -75,7 +75,7 @@ public static class PingUtils
                 Console.WriteLine("work : " + filePath + " " + k * 100 / 255 + "%");
             foreach (var l in Constantes.ByteRange)
             {
-                byteArray[index] = await Ping(new IpV4(i, j, l, k)) ? (byte) 1 : (byte) 0;
+                byteArray[index] = await Ping(new IpV4(i, j, l, k)) ? (byte)1 : (byte)0;
                 index++;
             }
         }
@@ -100,7 +100,7 @@ public static class PingUtils
                 Console.WriteLine("work : " + filePath + " " + k * 100 / 255 + "%");
             foreach (var l in Constantes.ByteRange)
             {
-                if (file[index] == 0) byteArray[index] = await Ping(new IpV4(i, j, k, l)) ? (byte) 1 : (byte) 0;
+                if (file[index] == 0) byteArray[index] = await Ping(new IpV4(i, j, k, l)) ? (byte)1 : (byte)0;
                 index++;
             }
         }

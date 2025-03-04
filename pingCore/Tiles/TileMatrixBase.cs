@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ImageMagick;
@@ -27,14 +26,13 @@ public abstract class TileMatrixBase
 
         for (short i = 0; i < Size / size; i++)
         {
-            
             for (short j = 0; j < Size / size; j++)
             {
                 taskList[j] = CombineImages(
-                    (short) (i * size), 
-                    (short) (j * size), 
-                    (short) (i * size + size),
-                    (short) (j * size + size),
+                    (short)(i * size),
+                    (short)(j * size),
+                    (short)(i * size + size),
+                    (short)(j * size + size),
                     Path.Combine(outPath, $"{x}.{y}.png")
                 );
 
@@ -63,7 +61,8 @@ public abstract class TileMatrixBase
         }
         else
         {
-            using var combinedImage = new MagickImage(Constantes.Black, (rx - lx) * 255, (ry - ly) * 255);
+            using var combinedImage =
+                new MagickImage(Constantes.Black, (uint)((rx - lx) * 255), (uint)((ry - ly) * 255));
             combinedImage.ColorType = ColorType.TrueColorAlpha;
             combinedImage.Format = MagickFormat.Png;
 
